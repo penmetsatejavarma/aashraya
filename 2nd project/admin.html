@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Suraksha Circle – Admin Panel</title>
+  <meta name="description" content="Admin dashboard for managing users, monitoring SOS events, volunteer verification, and system health.">
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+  <link rel="stylesheet" href="css/style.css">
+  <link rel="stylesheet" href="css/dashboard.css">
+</head>
+<body>
+  <div class="dashboard-layout">
+    <!-- Sidebar -->
+    <aside class="sidebar desktop-only">
+      <div class="sidebar-logo">
+        <i class="fas fa-shield-heart"></i>
+        <span>Suraksha Circle</span>
+      </div>
+      <a href="admin.html" class="sidebar-link active"><i class="fas fa-gauge-high"></i><span>Dashboard</span></a>
+      <a href="#" class="sidebar-link"><i class="fas fa-users"></i><span>Users</span></a>
+      <a href="#" class="sidebar-link"><i class="fas fa-circle-exclamation"></i><span>SOS Events</span></a>
+      <a href="#" class="sidebar-link"><i class="fas fa-hands-helping"></i><span>Volunteers</span></a>
+      <a href="reports.html" class="sidebar-link"><i class="fas fa-chart-line"></i><span>Reports</span></a>
+      <a href="#" class="sidebar-link"><i class="fas fa-gear"></i><span>Settings</span></a>
+      <div class="sidebar-toggle">
+        <button class="btn btn-outline btn-sm btn-block sidebar-toggle-btn"><i class="fas fa-angles-left"></i> Collapse</button>
+      </div>
+    </aside>
+
+    <!-- Main Content -->
+    <div class="dashboard-main">
+      <!-- Header -->
+      <header class="app-header">
+        <div class="logo mobile-only"><i class="fas fa-shield-heart"></i><span>Suraksha Circle</span></div>
+        <div class="desktop-only"><h2>Admin Dashboard</h2></div>
+        <div class="header-actions">
+          <div class="lang-toggle">
+            <button data-lang="en" class="active">EN</button>
+            <button data-lang="te">తె</button>
+          </div>
+          <button class="icon-btn"><i class="fas fa-bell"></i><span class="notification-badge">5</span></button>
+          <div class="profile-dropdown">
+            <div class="profile-avatar" style="background:var(--purple);">AD</div>
+            <div class="dropdown-menu">
+              <a href="#"><i class="fas fa-user"></i> Profile</a>
+              <a href="index.html"><i class="fas fa-arrow-right-arrow-left"></i> Switch Role</a>
+              <div class="dropdown-divider"></div>
+              <a href="#" onclick="logout()"><i class="fas fa-right-from-bracket"></i> Logout</a>
+            </div>
+          </div>
+        </div>
+      </header>
+
+      <div style="padding:24px;">
+        <!-- KPI Cards -->
+        <div class="admin-kpi-row">
+          <div class="stat-card fade-on-scroll">
+            <div class="stat-icon blue"><i class="fas fa-user-group"></i></div>
+            <div class="stat-info"><h3 data-count="1247">0</h3><p>Total Seniors</p></div>
+          </div>
+          <div class="stat-card fade-on-scroll">
+            <div class="stat-icon red"><i class="fas fa-circle-exclamation"></i></div>
+            <div class="stat-info"><h3 data-count="3">0</h3><p>Active SOS Today</p></div>
+          </div>
+          <div class="stat-card fade-on-scroll">
+            <div class="stat-icon green"><i class="fas fa-hands-helping"></i></div>
+            <div class="stat-info"><h3 data-count="89">0</h3><p>Volunteers Available</p></div>
+          </div>
+          <div class="stat-card fade-on-scroll">
+            <div class="stat-icon amber"><i class="fas fa-pills"></i></div>
+            <div class="stat-info">
+              <h3 data-count="78">0</h3>
+              <p>Medicine Adherence %</p>
+              <div class="progress-bar mt-1"><div class="progress-fill green" style="width:78%"></div></div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Charts Row -->
+        <div class="admin-charts-row">
+          <div class="chart-card fade-on-scroll">
+            <h3>SOS Frequency (Last 30 Days)</h3>
+            <div style="height:260px;"><canvas id="sosFreqChart"></canvas></div>
+          </div>
+          <div class="chart-card fade-on-scroll">
+            <h3>Risk Distribution</h3>
+            <div style="height:260px;"><canvas id="riskDistChart"></canvas></div>
+          </div>
+        </div>
+
+        <!-- User Management -->
+        <div class="card mb-3 fade-on-scroll">
+          <h3 class="card-title mb-2">User Management</h3>
+          <div class="table-controls">
+            <div class="search-box">
+              <i class="fas fa-search"></i>
+              <input type="text" id="adminSearch" placeholder="Search users...">
+            </div>
+            <button class="btn btn-secondary btn-sm"><i class="fas fa-plus"></i> Add User</button>
+          </div>
+          <div style="overflow-x:auto;">
+            <table class="data-table">
+              <thead>
+                <tr><th>Name</th><th>Role</th><th>Phone</th><th>Status</th><th>Actions</th></tr>
+              </thead>
+              <tbody id="userTableBody"></tbody>
+            </table>
+          </div>
+          <div class="pagination">
+            <button><i class="fas fa-chevron-left"></i></button>
+            <button class="active">1</button>
+            <button>2</button>
+            <button>3</button>
+            <button><i class="fas fa-chevron-right"></i></button>
+          </div>
+        </div>
+
+        <!-- Volunteer Verification Queue -->
+        <div class="card mb-3 fade-on-scroll">
+          <h3 class="card-title mb-2">Volunteer Verification Queue</h3>
+          <div id="verifyQueue"></div>
+        </div>
+
+        <!-- System Health -->
+        <div class="card fade-on-scroll">
+          <h3 class="card-title mb-2">System Health</h3>
+          <div class="health-grid">
+            <div class="health-item">
+              <span class="health-indicator online"></span>
+              <span class="health-label">Server Status</span>
+              <span class="health-value" style="color:var(--accent);">🟢 Online</span>
+            </div>
+            <div class="health-item">
+              <span class="health-indicator online"></span>
+              <span class="health-label">Last Backup</span>
+              <span class="health-value">2 hours ago</span>
+            </div>
+            <div class="health-item">
+              <span class="health-indicator online"></span>
+              <span class="health-label">Active Connections</span>
+              <span class="health-value">34</span>
+            </div>
+            <div class="health-item">
+              <span class="health-indicator online"></span>
+              <span class="health-label">Uptime</span>
+              <span class="health-value" style="color:var(--accent);">99.97%</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Bottom Nav (Mobile) -->
+  <nav class="bottom-nav mobile-only">
+    <a href="admin.html" class="active"><i class="fas fa-gauge-high"></i><span>Dashboard</span></a>
+    <a href="#"><i class="fas fa-users"></i><span>Users</span></a>
+    <a href="#"><i class="fas fa-circle-exclamation"></i><span>SOS</span></a>
+    <a href="reports.html"><i class="fas fa-chart-line"></i><span>Reports</span></a>
+    <a href="#"><i class="fas fa-gear"></i><span>Settings</span></a>
+  </nav>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.js"></script>
+  <script src="data/mock-data.js"></script>
+  <script src="js/app.js"></script>
+  <script src="js/charts.js"></script>
+  <script src="js/admin.js"></script>
+</body>
+</html>

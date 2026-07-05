@@ -1,0 +1,242 @@
+/* ============================================================
+   Caregiver Dashboard – Styles
+   ============================================================ */
+
+/* ---------- Dashboard Header ---------- */
+.dash-header {
+  padding: 20px 24px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 12px;
+}
+
+.dash-header h1 {
+  font-size: 1.5rem;
+}
+
+/* ---------- Stats Row ---------- */
+.stats-row {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 16px;
+  padding: 0 24px 24px;
+}
+
+/* ---------- Senior Profile Card ---------- */
+.profile-card {
+  display: flex;
+  gap: 20px;
+  align-items: flex-start;
+  flex-wrap: wrap;
+}
+
+.profile-avatar-lg {
+  width: 80px;
+  height: 80px;
+  border-radius: 50%;
+  background: var(--secondary);
+  color: white;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.8rem;
+  font-weight: 700;
+  flex-shrink: 0;
+}
+
+.profile-details {
+  flex: 1;
+  min-width: 200px;
+}
+
+.profile-details h3 {
+  font-size: 1.2rem;
+  margin-bottom: 4px;
+}
+
+.profile-meta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  margin: 8px 0 16px;
+}
+
+.profile-meta span {
+  font-size: 0.8rem;
+  color: var(--text-secondary);
+}
+
+.profile-meta span i {
+  margin-right: 4px;
+}
+
+.profile-actions {
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+/* ---------- Map Placeholder ---------- */
+.map-placeholder {
+  background: #E8EAF6;
+  border-radius: var(--radius-lg);
+  height: 280px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  overflow: hidden;
+}
+
+.map-placeholder .map-grid {
+  position: absolute;
+  inset: 0;
+  background-image: 
+    linear-gradient(rgba(0,0,0,0.04) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(0,0,0,0.04) 1px, transparent 1px);
+  background-size: 40px 40px;
+}
+
+.map-placeholder .map-pin {
+  position: relative;
+  z-index: 2;
+  text-align: center;
+}
+
+.map-placeholder .map-pin i {
+  font-size: 2.5rem;
+  color: var(--accent);
+}
+
+.map-placeholder .map-pin.sos-active i {
+  color: var(--primary);
+  animation: pulse-icon 0.8s ease infinite;
+}
+
+.map-placeholder .map-pin p {
+  font-size: 0.85rem;
+  color: var(--text-secondary);
+  margin-top: 8px;
+}
+
+.location-dot {
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+  background: var(--accent);
+  position: absolute;
+  top: 45%;
+  left: 55%;
+  z-index: 3;
+  animation: blink 1.5s ease infinite;
+}
+
+.location-dot.sos {
+  background: var(--primary);
+  animation: blink 0.5s ease infinite;
+}
+
+@keyframes blink {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.3; }
+}
+
+/* ---------- Risk Score Card ---------- */
+.risk-breakdown {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin-top: 16px;
+}
+
+.risk-item {
+  display: flex;
+  justify-content: space-between;
+  font-size: 0.85rem;
+}
+
+.risk-item .label {
+  color: var(--text-secondary);
+}
+
+.risk-item .value {
+  font-weight: 600;
+}
+
+/* ---------- Dashboard Cards Grid ---------- */
+.dash-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 20px;
+  padding: 0 24px 24px;
+}
+
+.dash-section {
+  padding: 0 24px 24px;
+}
+
+/* ---------- SOS Toggle Simulation ---------- */
+.sos-toggle-bar {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 12px 24px;
+  background: var(--card-bg);
+  border-radius: var(--radius);
+  margin: 0 24px 20px;
+  box-shadow: var(--shadow);
+}
+
+.sos-toggle-bar span {
+  font-weight: 600;
+  font-size: 0.9rem;
+}
+
+/* ---------- Responsive ---------- */
+@media (max-width: 1024px) {
+  .dash-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 768px) {
+  .stats-row {
+    grid-template-columns: repeat(2, 1fr);
+    padding: 0 16px 16px;
+  }
+
+  .dash-grid {
+    padding: 0 16px 16px;
+  }
+
+  .dash-header {
+    padding: 16px;
+  }
+
+  .dash-section {
+    padding: 0 16px 16px;
+  }
+
+  .sos-toggle-bar {
+    margin: 0 16px 16px;
+  }
+}
+
+@media (max-width: 480px) {
+  .stats-row {
+    grid-template-columns: 1fr;
+  }
+
+  .profile-card {
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+  }
+
+  .profile-actions {
+    justify-content: center;
+  }
+}

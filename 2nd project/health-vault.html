@@ -1,0 +1,218 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Suraksha Circle – Health Record Vault</title>
+  <meta name="description" content="Senior citizen health profile, emergency QR code, and medical document vault.">
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+  <link rel="stylesheet" href="css/style.css">
+  <style>
+    .blood-badge {
+      display: inline-flex; align-items: center; justify-content: center;
+      width: 72px; height: 72px; border-radius: 50%;
+      background: #FFEBEE; color: var(--primary);
+      font-size: 1.6rem; font-weight: 700;
+    }
+    .allergy-tags { display: flex; gap: 8px; flex-wrap: wrap; margin-top: 8px; }
+    .allergy-tag {
+      background: #FFEBEE; color: var(--primary); padding: 6px 14px;
+      border-radius: 8px; font-size: 0.8rem; font-weight: 600;
+    }
+    .contact-card {
+      display: flex; align-items: center; gap: 12px; padding: 14px 0;
+      border-bottom: 1px solid var(--border);
+    }
+    .contact-card:last-child { border-bottom: none; }
+    .contact-avatar {
+      width: 44px; height: 44px; border-radius: 50%;
+      background: var(--secondary-light); color: white;
+      display: flex; align-items: center; justify-content: center;
+      font-weight: 700; font-size: 0.8rem; flex-shrink: 0;
+    }
+    .upload-area {
+      border: 2px dashed var(--border); border-radius: var(--radius-lg);
+      padding: 40px 20px; text-align: center; cursor: pointer;
+      transition: var(--transition);
+    }
+    .upload-area:hover { border-color: var(--secondary); background: #E3F2FD22; }
+    .upload-area i { font-size: 2.5rem; color: var(--text-secondary); margin-bottom: 12px; }
+    .doc-card {
+      display: flex; align-items: center; gap: 14px; padding: 14px;
+      background: var(--bg); border-radius: var(--radius); margin-bottom: 10px;
+    }
+    .doc-icon {
+      width: 48px; height: 48px; border-radius: 10px;
+      background: #E3F2FD; display: flex; align-items: center; justify-content: center;
+      color: var(--secondary); font-size: 1.2rem; flex-shrink: 0;
+    }
+    .qr-section { text-align: center; }
+    .qr-section h3 { margin-bottom: 16px; }
+  </style>
+</head>
+<body>
+  <div class="page-wrapper">
+    <!-- Header -->
+    <header class="app-header">
+      <div class="logo"><i class="fas fa-shield-heart"></i><span>Suraksha Circle</span></div>
+      <div class="header-actions">
+        <div class="lang-toggle">
+          <button data-lang="en" class="active">EN</button>
+          <button data-lang="te">తె</button>
+        </div>
+        <button class="icon-btn"><i class="fas fa-bell"></i><span class="notification-badge">2</span></button>
+        <div class="profile-dropdown">
+          <div class="profile-avatar">RK</div>
+          <div class="dropdown-menu">
+            <a href="#"><i class="fas fa-user"></i> Profile</a>
+            <a href="index.html"><i class="fas fa-arrow-right-arrow-left"></i> Switch Role</a>
+            <div class="dropdown-divider"></div>
+            <a href="#" onclick="logout()"><i class="fas fa-right-from-bracket"></i> Logout</a>
+          </div>
+        </div>
+      </div>
+    </header>
+
+    <main class="main-content container">
+      <h1 class="mb-3">📋 Health Record Vault</h1>
+
+      <!-- Health Profile Card -->
+      <div class="card mb-3 fade-on-scroll">
+        <h3 class="card-title mb-2">Health Profile</h3>
+        <div style="display:flex;gap:24px;flex-wrap:wrap;">
+          <div style="display:flex;flex-direction:column;align-items:center;gap:8px;">
+            <div class="blood-badge" id="bloodBadge">B+</div>
+            <span style="font-size:0.78rem;color:var(--text-secondary);">Blood Group</span>
+          </div>
+          <div style="flex:1;min-width:200px;">
+            <h4 style="margin-bottom:8px;"><i class="fas fa-triangle-exclamation" style="color:var(--primary);margin-right:6px;"></i> Allergies</h4>
+            <div class="allergy-tags" id="allergyTags"></div>
+            
+            <h4 style="margin:20px 0 12px;"><i class="fas fa-user-doctor" style="color:var(--secondary);margin-right:6px;"></i> Primary Doctor</h4>
+            <div style="display:flex;align-items:center;gap:12px;">
+              <div class="contact-avatar">DR</div>
+              <div>
+                <div style="font-weight:600;" id="doctorName">–</div>
+                <div style="font-size:0.8rem;color:var(--text-secondary);" id="doctorPhone">–</div>
+              </div>
+              <a href="#" class="btn btn-outline btn-sm" style="margin-left:auto;min-height:36px;"><i class="fas fa-phone"></i></a>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Emergency Contacts -->
+      <div class="card mb-3 fade-on-scroll">
+        <h3 class="card-title mb-2"><i class="fas fa-address-book" style="color:var(--secondary);margin-right:8px;"></i> Emergency Contacts</h3>
+        <div id="emergencyContacts"></div>
+      </div>
+
+      <!-- QR Code Section -->
+      <div class="card mb-3 fade-on-scroll qr-section">
+        <h3><i class="fas fa-qrcode" style="margin-right:8px;"></i> Emergency QR Code</h3>
+        <p style="color:var(--text-secondary);margin-bottom:16px;">Scan for Emergency Info</p>
+        <div style="display:flex;justify-content:center;margin-bottom:20px;" id="healthQR"></div>
+        <div style="display:flex;gap:10px;justify-content:center;">
+          <button class="btn btn-outline btn-sm" onclick="showToast('QR Code downloaded!','success')"><i class="fas fa-download"></i> Download QR</button>
+          <button class="btn btn-outline btn-sm" onclick="window.print()"><i class="fas fa-print"></i> Print QR</button>
+        </div>
+      </div>
+
+      <!-- Documents Section -->
+      <div class="card mb-3 fade-on-scroll">
+        <h3 class="card-title mb-2"><i class="fas fa-folder-open" style="color:var(--warning);margin-right:8px;"></i> Medical Documents</h3>
+        
+        <!-- Upload Area -->
+        <div class="upload-area mb-2" onclick="showToast('Upload feature requires backend integration','info')">
+          <i class="fas fa-cloud-arrow-up" style="display:block;"></i>
+          <p style="font-weight:600;margin-bottom:4px;">Drop files here or click to upload</p>
+          <p style="font-size:0.78rem;color:var(--text-secondary);">Supports PDF, JPG, PNG (Max 10MB)</p>
+        </div>
+
+        <!-- Document List -->
+        <div id="documentList"></div>
+      </div>
+    </main>
+
+    <!-- Bottom Nav -->
+    <nav class="bottom-nav">
+      <a href="senior.html"><i class="fas fa-house"></i><span>Home</span></a>
+      <a href="medicines.html"><i class="fas fa-pills"></i><span>Medicines</span></a>
+      <a href="senior.html"><i class="fas fa-circle-check"></i><span>Check-In</span></a>
+      <a href="health-vault.html" class="active"><i class="fas fa-user"></i><span>Profile</span></a>
+    </nav>
+  </div>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+  <script src="data/mock-data.js"></script>
+  <script src="js/app.js"></script>
+  <script>
+    document.addEventListener('DOMContentLoaded', function() {
+      // Blood Group
+      document.getElementById('bloodBadge').textContent = seniorData.bloodGroup;
+
+      // Allergies
+      const tagContainer = document.getElementById('allergyTags');
+      seniorData.allergies.forEach(a => {
+        tagContainer.innerHTML += `<span class="allergy-tag"><i class="fas fa-xmark" style="margin-right:4px;"></i>${a}</span>`;
+      });
+
+      // Doctor
+      document.getElementById('doctorName').textContent = seniorData.primaryDoctor.name;
+      document.getElementById('doctorPhone').textContent = seniorData.primaryDoctor.phone;
+
+      // Emergency Contacts
+      const contactsEl = document.getElementById('emergencyContacts');
+      seniorData.emergencyContacts.forEach(c => {
+        const initials = c.name.split(' ').filter(n => !n.includes('(')).map(n => n[0]).join('').substring(0,2);
+        contactsEl.innerHTML += `
+          <div class="contact-card">
+            <div class="contact-avatar">${initials}</div>
+            <div style="flex:1;">
+              <div style="font-weight:600;font-size:0.9rem;">${c.name}</div>
+              <div style="font-size:0.78rem;color:var(--text-secondary);">${c.phone} • ${c.relation}</div>
+            </div>
+            <a href="tel:${c.phone}" class="btn btn-outline btn-sm" style="min-height:36px;"><i class="fas fa-phone"></i></a>
+          </div>
+        `;
+      });
+
+      // QR Code
+      const qrDiv = document.getElementById('healthQR');
+      if (typeof QRCode !== 'undefined') {
+        new QRCode(qrDiv, {
+          text: JSON.stringify({
+            name: seniorData.name,
+            age: seniorData.age,
+            bloodGroup: seniorData.bloodGroup,
+            allergies: seniorData.allergies,
+            emergency: seniorData.emergencyContacts.map(c => ({name: c.name, phone: c.phone}))
+          }),
+          width: 220,
+          height: 220,
+          colorDark: '#212121',
+          colorLight: '#ffffff'
+        });
+      }
+
+      // Documents
+      const docList = document.getElementById('documentList');
+      healthDocuments.forEach(doc => {
+        const icon = doc.type === 'pdf' ? 'fa-file-pdf' : 'fa-file-image';
+        docList.innerHTML += `
+          <div class="doc-card">
+            <div class="doc-icon"><i class="fas ${icon}"></i></div>
+            <div style="flex:1;">
+              <div style="font-weight:600;font-size:0.9rem;">${doc.name}</div>
+              <div style="font-size:0.78rem;color:var(--text-secondary);">${doc.date} • ${doc.size}</div>
+            </div>
+            <button class="btn btn-outline btn-sm" style="min-height:36px;" onclick="showToast('Viewing ${doc.name}','info')"><i class="fas fa-eye"></i></button>
+            <button class="btn btn-sm" style="min-height:36px;background:#FFEBEE;color:var(--primary);" onclick="this.parentElement.style.animation='fadeOut 0.3s ease forwards';setTimeout(()=>this.parentElement.remove(),300);showToast('Document deleted','warning');"><i class="fas fa-trash"></i></button>
+          </div>
+        `;
+      });
+    });
+  </script>
+</body>
+</html>

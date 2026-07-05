@@ -1,0 +1,193 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Suraksha Circle – Analytics & Reports</title>
+  <meta name="description" content="Analytics dashboard with SOS frequency, medicine adherence, risk score trends, and check-in compliance reports.">
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+  <link rel="stylesheet" href="css/style.css">
+  <link rel="stylesheet" href="css/dashboard.css">
+</head>
+<body>
+  <div class="dashboard-layout">
+    <!-- Sidebar -->
+    <aside class="sidebar desktop-only">
+      <div class="sidebar-logo">
+        <i class="fas fa-shield-heart"></i>
+        <span>Suraksha Circle</span>
+      </div>
+      <a href="admin.html" class="sidebar-link"><i class="fas fa-gauge-high"></i><span>Dashboard</span></a>
+      <a href="#" class="sidebar-link"><i class="fas fa-users"></i><span>Users</span></a>
+      <a href="#" class="sidebar-link"><i class="fas fa-circle-exclamation"></i><span>SOS Events</span></a>
+      <a href="#" class="sidebar-link"><i class="fas fa-hands-helping"></i><span>Volunteers</span></a>
+      <a href="reports.html" class="sidebar-link active"><i class="fas fa-chart-line"></i><span>Reports</span></a>
+      <a href="#" class="sidebar-link"><i class="fas fa-gear"></i><span>Settings</span></a>
+      <div class="sidebar-toggle">
+        <button class="btn btn-outline btn-sm btn-block sidebar-toggle-btn"><i class="fas fa-angles-left"></i> Collapse</button>
+      </div>
+    </aside>
+
+    <!-- Main Content -->
+    <div class="dashboard-main">
+      <!-- Header -->
+      <header class="app-header">
+        <div class="logo mobile-only"><i class="fas fa-shield-heart"></i><span>Suraksha Circle</span></div>
+        <div class="desktop-only"><h2>📊 Analytics & Reports</h2></div>
+        <div class="header-actions">
+          <div class="lang-toggle">
+            <button data-lang="en" class="active">EN</button>
+            <button data-lang="te">తె</button>
+          </div>
+          <button class="icon-btn"><i class="fas fa-bell"></i><span class="notification-badge">2</span></button>
+          <div class="profile-dropdown">
+            <div class="profile-avatar" style="background:var(--purple);">AD</div>
+            <div class="dropdown-menu">
+              <a href="#"><i class="fas fa-user"></i> Profile</a>
+              <a href="index.html"><i class="fas fa-arrow-right-arrow-left"></i> Switch Role</a>
+              <div class="dropdown-divider"></div>
+              <a href="#" onclick="logout()"><i class="fas fa-right-from-bracket"></i> Logout</a>
+            </div>
+          </div>
+        </div>
+      </header>
+
+      <div style="padding:24px;">
+        <h1 class="mb-2 mobile-only">📊 Analytics & Reports</h1>
+
+        <!-- Date Range Filter -->
+        <div class="date-filter" id="dateFilter">
+          <button data-range="7">Last 7 Days</button>
+          <button data-range="30" class="active">Last 30 Days</button>
+          <button data-range="90">Last 90 Days</button>
+        </div>
+
+        <!-- Summary Stats -->
+        <div class="summary-stats fade-on-scroll">
+          <div class="summary-stat">
+            <div class="stat-number" style="color:var(--primary);" data-count="12">0</div>
+            <div class="stat-label">Total SOS This Month</div>
+          </div>
+          <div class="summary-stat">
+            <div class="stat-number" style="color:var(--accent);" data-count="32">0</div>
+            <div class="stat-label">Avg Risk Score</div>
+          </div>
+          <div class="summary-stat">
+            <div class="stat-number" style="color:var(--secondary);">Week 3</div>
+            <div class="stat-label">Best Adherence Week</div>
+          </div>
+        </div>
+
+        <!-- Charts -->
+        <div class="chart-card mb-3 fade-on-scroll">
+          <h3>SOS Frequency Over Time</h3>
+          <div style="height:300px;"><canvas id="reportSOSChart"></canvas></div>
+        </div>
+
+        <div class="chart-card mb-3 fade-on-scroll">
+          <h3>Medicine Adherence % Per Week</h3>
+          <div style="height:300px;"><canvas id="reportAdherenceChart"></canvas></div>
+        </div>
+
+        <div class="chart-card mb-3 fade-on-scroll">
+          <h3>AI Risk Score Trend</h3>
+          <div style="height:300px;"><canvas id="reportRiskChart"></canvas></div>
+        </div>
+
+        <div class="chart-card mb-3 fade-on-scroll">
+          <h3>Check-In Compliance</h3>
+          <div style="height:300px;"><canvas id="reportCheckinChart"></canvas></div>
+        </div>
+
+        <!-- Export Button -->
+        <div style="text-align:center;padding:20px 0;">
+          <button class="btn btn-primary" onclick="window.print(); showToast('Report ready for PDF export','success');">
+            <i class="fas fa-file-pdf"></i> Download Report (PDF)
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Bottom Nav (Mobile) -->
+  <nav class="bottom-nav mobile-only">
+    <a href="admin.html"><i class="fas fa-gauge-high"></i><span>Dashboard</span></a>
+    <a href="#"><i class="fas fa-users"></i><span>Users</span></a>
+    <a href="#"><i class="fas fa-circle-exclamation"></i><span>SOS</span></a>
+    <a href="reports.html" class="active"><i class="fas fa-chart-line"></i><span>Reports</span></a>
+    <a href="#"><i class="fas fa-gear"></i><span>Settings</span></a>
+  </nav>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.js"></script>
+  <script src="data/mock-data.js"></script>
+  <script src="js/app.js"></script>
+  <script src="js/charts.js"></script>
+  <script>
+    document.addEventListener('DOMContentLoaded', function() {
+      initReportCharts();
+      initDateFilter();
+      animateReportStats();
+    });
+
+    function initReportCharts() {
+      // 1. SOS Frequency – Line Chart
+      createLineChart(
+        'reportSOSChart',
+        sosFrequencyData.labels,
+        sosFrequencyData.data,
+        'SOS Incidents',
+        '#E53935'
+      );
+
+      // 2. Medicine Adherence – Bar Chart
+      createBarChart(
+        'reportAdherenceChart',
+        adherenceWeeklyData.labels,
+        adherenceWeeklyData.data,
+        'Adherence %',
+        adherenceWeeklyData.data.map(v => v >= 85 ? '#2E7D32' : '#F57F17')
+      );
+
+      // 3. Risk Score Trend – Line with thresholds
+      createThresholdLineChart(
+        'reportRiskChart',
+        riskTrendData.labels,
+        riskTrendData.data,
+        'Risk Score',
+        '#1565C0',
+        [
+          { label: 'Medium Threshold', value: 40, color: '#F57F17' },
+          { label: 'High Threshold', value: 70, color: '#E53935' }
+        ]
+      );
+
+      // 4. Check-In Compliance – Area Chart
+      createAreaChart(
+        'reportCheckinChart',
+        checkinComplianceData.labels,
+        checkinComplianceData.data.map(v => v * 100),
+        'Compliance %',
+        '#2E7D32'
+      );
+    }
+
+    function initDateFilter() {
+      document.querySelectorAll('#dateFilter button').forEach(btn => {
+        btn.addEventListener('click', function() {
+          document.querySelectorAll('#dateFilter button').forEach(b => b.classList.remove('active'));
+          this.classList.add('active');
+          showToast(`Showing data for last ${this.dataset.range} days`, 'info');
+        });
+      });
+    }
+
+    function animateReportStats() {
+      document.querySelectorAll('[data-count]').forEach(el => {
+        const target = parseInt(el.dataset.count);
+        animateCountUp(el, target, 1000);
+      });
+    }
+  </script>
+</body>
+</html>

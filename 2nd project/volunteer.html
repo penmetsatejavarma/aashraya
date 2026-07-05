@@ -1,0 +1,208 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Suraksha Circle – Volunteer Panel</title>
+  <meta name="description" content="Volunteer panel for accepting emergency alerts, managing availability, and tracking response history.">
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+  <link rel="stylesheet" href="css/style.css">
+  <style>
+    .volunteer-page { max-width: 800px; margin: 0 auto; padding: 0 20px 100px; }
+
+    .volunteer-profile {
+      display: flex; align-items: center; gap: 20px; flex-wrap: wrap;
+    }
+    .vol-avatar {
+      width: 72px; height: 72px; border-radius: 50%;
+      background: var(--secondary); color: white;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 1.6rem; font-weight: 700; flex-shrink: 0;
+    }
+    .vol-info { flex: 1; min-width: 200px; }
+    .vol-info h2 { font-size: 1.3rem; margin-bottom: 2px; }
+    .vol-meta { display: flex; gap: 16px; align-items: center; flex-wrap: wrap; margin-top: 6px; }
+    .vol-meta span { font-size: 0.8rem; color: var(--text-secondary); }
+    .vol-stars { color: var(--warning); font-size: 0.9rem; }
+    .verified-badge {
+      display: inline-flex; align-items: center; gap: 4px;
+      background: #E8F5E9; color: var(--accent); padding: 4px 10px;
+      border-radius: 20px; font-size: 0.75rem; font-weight: 600;
+    }
+
+    .availability-row {
+      display: flex; align-items: center; gap: 16px; margin-top: 16px;
+      padding: 16px; background: var(--bg); border-radius: var(--radius);
+    }
+    .availability-row .avail-label { font-weight: 600; font-size: 0.9rem; }
+    #availStatus { font-weight: 700; font-size: 0.9rem; color: var(--accent); }
+    .zone-info { font-size: 0.8rem; color: var(--text-secondary); margin-left: auto; }
+
+    /* Alert Card */
+    .alert-card {
+      border: 3px solid var(--primary); border-radius: var(--radius-lg);
+      padding: 24px; background: #FFF5F5; animation: pulse-border 2s ease infinite;
+    }
+    @keyframes pulse-border {
+      0%, 100% { border-color: var(--primary); }
+      50% { border-color: #FFCDD2; }
+    }
+    @keyframes fadeOut {
+      to { opacity: 0; transform: translateY(-10px); }
+    }
+    .alert-card .alert-title {
+      font-size: 1.3rem; font-weight: 700; color: var(--primary); margin-bottom: 8px;
+    }
+    .alert-card .alert-details {
+      display: flex; gap: 16px; flex-wrap: wrap; margin: 16px 0;
+    }
+    .alert-card .alert-details .detail {
+      display: flex; align-items: center; gap: 8px; font-size: 0.85rem; color: var(--text-secondary);
+    }
+    .alert-card .alert-details .detail i { color: var(--primary); }
+    .alert-actions { display: flex; gap: 12px; margin-top: 20px; }
+
+    /* Response View */
+    .response-view { display: none; }
+    .response-map {
+      background: #E8EAF6; border-radius: var(--radius-lg);
+      height: 200px; display: flex; align-items: center; justify-content: center;
+      flex-direction: column; margin-bottom: 16px;
+    }
+    .response-map i { font-size: 2.5rem; color: var(--secondary); margin-bottom: 8px; }
+    .response-map p { font-size: 0.85rem; color: var(--text-secondary); }
+
+    /* Stats */
+    .vol-stats { display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; }
+    @media (max-width: 600px) {
+      .vol-stats { grid-template-columns: repeat(2, 1fr); }
+      .volunteer-profile { flex-direction: column; align-items: flex-start; }
+      .vol-info { min-width: auto; }
+      .alert-actions { flex-direction: column; }
+    }
+  </style>
+</head>
+<body>
+  <div class="page-wrapper">
+    <!-- Header -->
+    <header class="app-header">
+      <div class="logo">
+        <i class="fas fa-shield-heart"></i>
+        <span>Suraksha Circle</span>
+      </div>
+      <div class="header-actions">
+        <div class="lang-toggle">
+          <button data-lang="en" class="active">EN</button>
+          <button data-lang="te">తె</button>
+        </div>
+        <button class="icon-btn"><i class="fas fa-bell"></i><span class="notification-badge">1</span></button>
+        <div class="profile-dropdown">
+          <div class="profile-avatar">SM</div>
+          <div class="dropdown-menu">
+            <a href="#"><i class="fas fa-user"></i> Profile</a>
+            <a href="index.html"><i class="fas fa-arrow-right-arrow-left"></i> Switch Role</a>
+            <div class="dropdown-divider"></div>
+            <a href="#" onclick="logout()"><i class="fas fa-right-from-bracket"></i> Logout</a>
+          </div>
+        </div>
+      </div>
+    </header>
+
+    <!-- Main Content -->
+    <main class="volunteer-page main-content">
+      <!-- Profile Card -->
+      <div class="card mb-3 fade-on-scroll">
+        <div class="volunteer-profile">
+          <div class="vol-avatar">SM</div>
+          <div class="vol-info">
+            <h2>Suresh M.</h2>
+            <div class="vol-meta">
+              <span class="vol-stars">★★★★★ 4.8</span>
+              <span class="verified-badge"><i class="fas fa-circle-check"></i> Verified</span>
+            </div>
+          </div>
+        </div>
+        <div class="availability-row">
+          <span class="avail-label">Availability:</span>
+          <label class="toggle-switch">
+            <input type="checkbox" id="availabilityToggle" checked>
+            <span class="toggle-slider"></span>
+          </label>
+          <span id="availStatus">Available</span>
+          <span class="zone-info"><i class="fas fa-location-crosshairs"></i> Active zone: 5 km</span>
+        </div>
+      </div>
+
+      <!-- Incoming Alert -->
+      <div class="card mb-3 fade-on-scroll" id="incomingAlert">
+        <div class="alert-card">
+          <div class="alert-title">🚨 Emergency Nearby!</div>
+          <p style="font-size:0.9rem;color:var(--text-primary);font-weight:600;">Ramaiah K., 0.8 km away</p>
+          <div class="alert-details">
+            <div class="detail"><i class="fas fa-route"></i> Distance: 0.8 km</div>
+            <div class="detail"><i class="fas fa-clock"></i> Est. time: 3 minutes</div>
+            <div class="detail"><i class="fas fa-droplet"></i> Blood: B+</div>
+          </div>
+          <div class="alert-actions">
+            <button class="btn btn-success btn-block" id="acceptAlert"><i class="fas fa-check"></i> Accept & Respond</button>
+            <button class="btn btn-outline btn-block" id="declineAlert" style="color:var(--primary);border-color:var(--primary);"><i class="fas fa-xmark"></i> Decline</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Response View (shown after accept) -->
+      <div class="card mb-3" id="responseView">
+        <h3 class="card-title mb-2">📍 Navigating to Senior</h3>
+        <div class="response-map">
+          <i class="fas fa-map-location-dot"></i>
+          <p>Map directions would appear here</p>
+        </div>
+        <div class="flex gap-1">
+          <button class="btn btn-secondary btn-block"><i class="fas fa-phone"></i> Call Senior</button>
+          <button class="btn btn-outline btn-block" onclick="showToast('Response completed!','success');this.closest('.card').innerHTML='<div style=\'text-align:center;padding:30px;\'><i class=\'fas fa-circle-check\' style=\'font-size:3rem;color:var(--accent);display:block;margin-bottom:12px;\'></i><h3>Response Completed!</h3><p style=\'color:var(--text-secondary);\'>Thank you for helping.</p></div>';"><i class="fas fa-flag-checkered"></i> Mark Resolved</button>
+        </div>
+      </div>
+
+      <!-- Stats -->
+      <h3 class="mb-2">My Stats</h3>
+      <div class="vol-stats mb-3">
+        <div class="stat-card fade-on-scroll">
+          <div class="stat-icon blue"><i class="fas fa-hands-helping"></i></div>
+          <div class="stat-info"><h3 data-count="34">0</h3><p>Total Responses</p></div>
+        </div>
+        <div class="stat-card fade-on-scroll">
+          <div class="stat-icon green"><i class="fas fa-stopwatch"></i></div>
+          <div class="stat-info"><h3>4.2 min</h3><p>Avg Response Time</p></div>
+        </div>
+        <div class="stat-card fade-on-scroll">
+          <div class="stat-icon amber"><i class="fas fa-star"></i></div>
+          <div class="stat-info"><h3>4.8</h3><p>Rating</p></div>
+        </div>
+        <div class="stat-card fade-on-scroll">
+          <div class="stat-icon purple"><i class="fas fa-award"></i></div>
+          <div class="stat-info"><h3>Gold</h3><p>Rank Badge</p></div>
+        </div>
+      </div>
+
+      <!-- Response History -->
+      <div class="card fade-on-scroll">
+        <h3 class="card-title mb-2">Response History</h3>
+        <div id="responseHistoryList"></div>
+      </div>
+    </main>
+
+    <!-- Bottom Nav -->
+    <nav class="bottom-nav">
+      <a href="volunteer.html" class="active"><i class="fas fa-house"></i><span>Home</span></a>
+      <a href="#"><i class="fas fa-bell"></i><span>Alerts</span></a>
+      <a href="#"><i class="fas fa-clock-rotate-left"></i><span>History</span></a>
+      <a href="#"><i class="fas fa-user"></i><span>Profile</span></a>
+    </nav>
+  </div>
+
+  <script src="data/mock-data.js"></script>
+  <script src="js/app.js"></script>
+  <script src="js/volunteer.js"></script>
+</body>
+</html>

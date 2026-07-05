@@ -1,0 +1,415 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Suraksha Circle – Login</title>
+  <meta name="description" content="Suraksha Circle – Smart Senior Citizen Safety Web App. Login to access emergency services, medicine reminders, and health monitoring.">
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+  <link rel="stylesheet" href="css/style.css">
+  <style>
+    .login-page {
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: var(--bg);
+      padding: 20px;
+      position: relative;
+    }
+
+    .login-lang-toggle {
+      position: absolute;
+      top: 20px;
+      right: 20px;
+    }
+
+    .login-card {
+      background: var(--card-bg);
+      border-radius: var(--radius-lg);
+      padding: 40px;
+      max-width: 440px;
+      width: 100%;
+      box-shadow: var(--shadow-lg);
+      animation: fadeInUp 0.6s ease;
+    }
+
+    .login-logo {
+      text-align: center;
+      margin-bottom: 32px;
+    }
+
+    .login-logo .shield-icon {
+      width: 80px;
+      height: 80px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, #FFEBEE, #FFCDD2);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin: 0 auto 16px;
+    }
+
+    .login-logo .shield-icon i {
+      font-size: 2.2rem;
+      color: var(--primary);
+    }
+
+    .login-logo h1 {
+      font-size: 1.6rem;
+      color: var(--text-primary);
+      margin-bottom: 4px;
+    }
+
+    .login-logo p {
+      color: var(--text-secondary);
+      font-size: 0.9rem;
+    }
+
+    /* Role Tabs */
+    .role-tabs {
+      display: flex;
+      background: var(--bg);
+      border-radius: var(--radius);
+      padding: 4px;
+      margin-bottom: 28px;
+    }
+
+    .role-tabs button {
+      flex: 1;
+      padding: 12px 8px;
+      border-radius: 10px;
+      font-size: 0.8rem;
+      font-weight: 600;
+      background: transparent;
+      color: var(--text-secondary);
+      border: none;
+      transition: var(--transition);
+      min-height: auto;
+    }
+
+    .role-tabs button.active {
+      background: var(--card-bg);
+      color: var(--primary);
+      box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+    }
+
+    /* Phone Input */
+    .phone-input-wrapper {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      margin-bottom: 20px;
+    }
+
+    .country-code {
+      min-width: 72px;
+      text-align: center;
+      background: var(--bg);
+      border: 2px solid var(--border);
+      border-radius: var(--radius);
+      padding: 14px 8px;
+      font-weight: 600;
+      color: var(--text-primary);
+      font-size: 1rem;
+    }
+
+    .phone-input-wrapper input {
+      flex: 1;
+    }
+
+    /* OTP Section */
+    .otp-section {
+      display: none;
+      animation: fadeInUp 0.4s ease;
+    }
+
+    .otp-section.visible {
+      display: block;
+    }
+
+    .otp-boxes {
+      display: flex;
+      gap: 10px;
+      justify-content: center;
+      margin: 20px 0;
+    }
+
+    .otp-boxes input {
+      width: 52px;
+      height: 60px;
+      text-align: center;
+      font-size: 1.4rem;
+      font-weight: 700;
+      border: 2px solid var(--border);
+      border-radius: var(--radius);
+      padding: 0;
+      transition: var(--transition);
+    }
+
+    .otp-boxes input:focus {
+      border-color: var(--secondary);
+      box-shadow: 0 0 0 3px rgba(21,101,192,0.15);
+    }
+
+    .otp-timer {
+      text-align: center;
+      color: var(--text-secondary);
+      font-size: 0.85rem;
+      margin-bottom: 16px;
+    }
+
+    .otp-timer span {
+      color: var(--primary);
+      font-weight: 600;
+    }
+
+    .resend-link {
+      color: var(--secondary);
+      font-weight: 600;
+      cursor: pointer;
+      font-size: 0.85rem;
+    }
+
+    .resend-link:hover {
+      text-decoration: underline;
+    }
+
+    .login-footer {
+      text-align: center;
+      margin-top: 24px;
+      color: var(--text-secondary);
+      font-size: 0.8rem;
+    }
+
+    @media (max-width: 480px) {
+      .login-card {
+        padding: 28px 20px;
+      }
+
+      .otp-boxes input {
+        width: 44px;
+        height: 52px;
+        font-size: 1.2rem;
+      }
+
+      .role-tabs button {
+        font-size: 0.72rem;
+        padding: 10px 4px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="login-page">
+    <!-- Language Toggle -->
+    <div class="login-lang-toggle">
+      <div class="lang-toggle">
+        <button data-lang="en" class="active">English</button>
+        <button data-lang="te">తెలుగు</button>
+      </div>
+    </div>
+
+    <!-- Login Card -->
+    <div class="login-card">
+      <!-- Logo -->
+      <div class="login-logo">
+        <div class="shield-icon">
+          <i class="fas fa-shield-heart"></i>
+        </div>
+        <h1 data-translate="Suraksha Circle">Suraksha Circle</h1>
+        <p data-translate="Your Safety, Our Priority">Your Safety, Our Priority</p>
+      </div>
+
+      <!-- Role Tabs -->
+      <div class="role-tabs" id="roleTabs">
+        <button class="active" data-role="senior" data-translate="Senior">Senior</button>
+        <button data-role="caregiver" data-translate="Caregiver">Caregiver</button>
+        <button data-role="volunteer" data-translate="Volunteer">Volunteer</button>
+        <button data-role="admin" data-translate="Admin">Admin</button>
+      </div>
+
+      <!-- Phone Input -->
+      <div id="phoneSection">
+        <div class="form-group">
+          <label for="phoneInput" data-translate="Phone Number">Phone Number</label>
+          <div class="phone-input-wrapper">
+            <span class="country-code">+91</span>
+            <input type="tel" id="phoneInput" placeholder="Enter your phone number" maxlength="10" inputmode="numeric">
+          </div>
+          <p class="form-error" id="phoneError">Please enter a valid 10-digit phone number</p>
+        </div>
+        <button class="btn btn-primary btn-block" id="sendOtpBtn" data-translate="Send OTP">
+          Send OTP
+        </button>
+      </div>
+
+      <!-- OTP Section -->
+      <div class="otp-section" id="otpSection">
+        <p style="text-align:center; margin-bottom: 8px; font-weight: 600;" data-translate="Enter OTP">Enter OTP</p>
+        <p style="text-align:center; color: var(--text-secondary); font-size: 0.85rem; margin-bottom: 16px;">
+          OTP sent to <span id="maskedPhone"></span>
+        </p>
+        <div class="otp-boxes" id="otpBoxes">
+          <input type="tel" maxlength="1" inputmode="numeric" data-index="0">
+          <input type="tel" maxlength="1" inputmode="numeric" data-index="1">
+          <input type="tel" maxlength="1" inputmode="numeric" data-index="2">
+          <input type="tel" maxlength="1" inputmode="numeric" data-index="3">
+          <input type="tel" maxlength="1" inputmode="numeric" data-index="4">
+          <input type="tel" maxlength="1" inputmode="numeric" data-index="5">
+        </div>
+        <div class="otp-timer">
+          Resend OTP in <span id="otpTimer">30</span>s
+        </div>
+        <button class="btn btn-primary btn-block" id="verifyBtn" data-translate="Verify & Login">
+          Verify & Login
+        </button>
+        <p style="text-align:center; margin-top: 12px;">
+          <span class="resend-link hidden" id="resendLink" onclick="resendOtp()">Resend OTP</span>
+        </p>
+      </div>
+
+      <!-- Footer -->
+      <div class="login-footer">
+        <p>By continuing, you agree to our Terms of Service</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- Toast Container -->
+  <div class="toast-container"></div>
+
+  <script src="data/mock-data.js"></script>
+  <script src="js/app.js"></script>
+  <script>
+    /* ---- Login Page Logic ---- */
+    const phoneInput = document.getElementById('phoneInput');
+    const sendOtpBtn = document.getElementById('sendOtpBtn');
+    const otpSection = document.getElementById('otpSection');
+    const phoneSection = document.getElementById('phoneSection');
+    const verifyBtn = document.getElementById('verifyBtn');
+    const phoneError = document.getElementById('phoneError');
+    const otpInputs = document.querySelectorAll('#otpBoxes input');
+    let selectedRole = 'senior';
+    let timerInterval;
+
+    /* Role Tab Selection */
+    document.querySelectorAll('#roleTabs button').forEach(btn => {
+      btn.addEventListener('click', function() {
+        document.querySelectorAll('#roleTabs button').forEach(b => b.classList.remove('active'));
+        this.classList.add('active');
+        selectedRole = this.dataset.role;
+      });
+    });
+
+    /* Send OTP */
+    sendOtpBtn.addEventListener('click', function() {
+      const phone = phoneInput.value.trim();
+      if (phone.length !== 10 || !/^\d{10}$/.test(phone)) {
+        phoneError.classList.add('visible');
+        phoneInput.classList.add('error');
+        return;
+      }
+      phoneError.classList.remove('visible');
+      phoneInput.classList.remove('error');
+
+      // Show loading
+      sendOtpBtn.innerHTML = '<span class="spinner"></span> Sending...';
+      sendOtpBtn.disabled = true;
+
+      setTimeout(() => {
+        otpSection.classList.add('visible');
+        document.getElementById('maskedPhone').textContent = `+91 ${phone.substring(0,2)}****${phone.substring(6)}`;
+        sendOtpBtn.innerHTML = 'Send OTP';
+        sendOtpBtn.disabled = true;
+        sendOtpBtn.style.opacity = '0.5';
+        showToast('OTP sent successfully!', 'success');
+        otpInputs[0].focus();
+        startTimer();
+      }, 1200);
+    });
+
+    /* OTP Input Auto-focus */
+    otpInputs.forEach((input, index) => {
+      input.addEventListener('input', function() {
+        if (this.value.length === 1 && index < 5) {
+          otpInputs[index + 1].focus();
+        }
+      });
+      input.addEventListener('keydown', function(e) {
+        if (e.key === 'Backspace' && !this.value && index > 0) {
+          otpInputs[index - 1].focus();
+        }
+      });
+      // Paste support
+      input.addEventListener('paste', function(e) {
+        e.preventDefault();
+        const text = (e.clipboardData || window.clipboardData).getData('text').replace(/\D/g, '');
+        for (let i = 0; i < Math.min(text.length, 6); i++) {
+          otpInputs[i].value = text[i];
+        }
+        if (text.length >= 6) otpInputs[5].focus();
+      });
+    });
+
+    /* Verify OTP */
+    verifyBtn.addEventListener('click', function() {
+      let otp = '';
+      otpInputs.forEach(input => otp += input.value);
+
+      if (otp.length !== 6) {
+        showToast('Please enter all 6 digits', 'warning');
+        return;
+      }
+
+      verifyBtn.innerHTML = '<span class="spinner"></span> Verifying...';
+      verifyBtn.disabled = true;
+
+      setTimeout(() => {
+        localStorage.setItem('suraksha-role', selectedRole);
+        showToast('Login successful!', 'success');
+        setTimeout(() => {
+          redirectToDashboard(selectedRole);
+        }, 800);
+      }, 1500);
+    });
+
+    /* OTP Timer */
+    function startTimer() {
+      let seconds = 30;
+      const timerEl = document.getElementById('otpTimer');
+      const resendLink = document.getElementById('resendLink');
+
+      clearInterval(timerInterval);
+      timerInterval = setInterval(() => {
+        seconds--;
+        timerEl.textContent = seconds;
+        if (seconds <= 0) {
+          clearInterval(timerInterval);
+          document.querySelector('.otp-timer').style.display = 'none';
+          resendLink.classList.remove('hidden');
+        }
+      }, 1000);
+    }
+
+    function resendOtp() {
+      document.querySelector('.otp-timer').style.display = 'block';
+      document.getElementById('resendLink').classList.add('hidden');
+      otpInputs.forEach(i => i.value = '');
+      otpInputs[0].focus();
+      startTimer();
+      showToast('OTP resent!', 'success');
+    }
+
+    /* Phone input validation – only numbers */
+    phoneInput.addEventListener('input', function() {
+      this.value = this.value.replace(/\D/g, '');
+      if (this.classList.contains('error') && this.value.length === 10) {
+        this.classList.remove('error');
+        phoneError.classList.remove('visible');
+      }
+    });
+  </script>
+</body>
+</html>

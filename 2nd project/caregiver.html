@@ -1,0 +1,228 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Suraksha Circle – Caregiver Dashboard</title>
+  <meta name="description" content="Caregiver dashboard for monitoring senior citizen health, SOS alerts, medicine adherence, and risk scores.">
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+  <link rel="stylesheet" href="css/style.css">
+  <link rel="stylesheet" href="css/caregiver.css">
+</head>
+<body>
+  <div class="dashboard-layout">
+    <!-- Sidebar (Desktop) -->
+    <aside class="sidebar desktop-only">
+      <div class="sidebar-logo">
+        <i class="fas fa-shield-heart"></i>
+        <span>Suraksha Circle</span>
+      </div>
+      <a href="caregiver.html" class="sidebar-link active"><i class="fas fa-gauge-high"></i><span data-translate="Dashboard">Dashboard</span></a>
+      <a href="#" class="sidebar-link"><i class="fas fa-map-location-dot"></i><span data-translate="Map">Map</span></a>
+      <a href="medicines.html" class="sidebar-link"><i class="fas fa-pills"></i><span data-translate="Medicines">Medicines</span></a>
+      <a href="reports.html" class="sidebar-link"><i class="fas fa-chart-line"></i><span data-translate="Reports">Reports</span></a>
+      <a href="#" class="sidebar-link"><i class="fas fa-gear"></i><span data-translate="Settings">Settings</span></a>
+      <div class="sidebar-toggle">
+        <button class="btn btn-outline btn-sm btn-block sidebar-toggle-btn"><i class="fas fa-angles-left"></i> Collapse</button>
+      </div>
+    </aside>
+
+    <!-- Main Content -->
+    <div class="dashboard-main">
+      <!-- Header -->
+      <header class="app-header">
+        <div class="logo mobile-only">
+          <i class="fas fa-shield-heart"></i>
+          <span>Suraksha Circle</span>
+        </div>
+        <div class="dash-header-title desktop-only">
+          <h2 data-translate="Dashboard">Dashboard</h2>
+        </div>
+        <div class="header-actions">
+          <div class="lang-toggle">
+            <button data-lang="en" class="active">EN</button>
+            <button data-lang="te">తె</button>
+          </div>
+          <button class="icon-btn"><i class="fas fa-bell"></i><span class="notification-badge">3</span></button>
+          <div class="profile-dropdown">
+            <div class="profile-avatar">CG</div>
+            <div class="dropdown-menu">
+              <a href="#"><i class="fas fa-user"></i> Profile</a>
+              <a href="index.html"><i class="fas fa-arrow-right-arrow-left"></i> Switch Role</a>
+              <div class="dropdown-divider"></div>
+              <a href="#" onclick="logout()"><i class="fas fa-right-from-bracket"></i> Logout</a>
+            </div>
+          </div>
+        </div>
+      </header>
+
+      <!-- SOS Alert Banner (hidden by default) -->
+      <div class="alert-banner hidden" id="sosAlertBanner">
+        <i class="fas fa-triangle-exclamation"></i>
+        ⚠️ EMERGENCY ALERT – Ramaiah needs help!
+        <button class="btn btn-sm" style="background:white;color:var(--primary);min-height:36px;margin-left:12px;" onclick="document.getElementById('sosSimToggle').checked=false;document.getElementById('sosSimToggle').dispatchEvent(new Event('change'));">Resolve</button>
+      </div>
+
+      <!-- SOS Toggle -->
+      <div class="sos-toggle-bar">
+        <span>Simulate SOS Alert:</span>
+        <label class="toggle-switch">
+          <input type="checkbox" id="sosSimToggle">
+          <span class="toggle-slider"></span>
+        </label>
+        <span style="font-size:0.8rem;color:var(--text-secondary);">Toggle to test emergency flow</span>
+      </div>
+
+      <!-- Stats Row -->
+      <div class="stats-row">
+        <div class="stat-card fade-on-scroll">
+          <div class="stat-icon red"><i class="fas fa-circle-exclamation"></i></div>
+          <div class="stat-info"><h3 data-count="0">0</h3><p>Active SOS</p></div>
+        </div>
+        <div class="stat-card fade-on-scroll">
+          <div class="stat-icon green"><i class="fas fa-circle-check"></i></div>
+          <div class="stat-info"><h3>Done</h3><p>Check-In Status</p></div>
+        </div>
+        <div class="stat-card fade-on-scroll">
+          <div class="stat-icon blue"><i class="fas fa-pills"></i></div>
+          <div class="stat-info">
+            <h3 data-count="87">0</h3>
+            <p>Medicine Adherence %</p>
+            <div class="progress-bar mt-1"><div class="progress-fill green" style="width:87%"></div></div>
+          </div>
+        </div>
+        <div class="stat-card fade-on-scroll">
+          <div class="stat-icon green"><i class="fas fa-shield-halved"></i></div>
+          <div class="stat-info"><h3>LOW</h3><p>Risk Level</p><span class="badge badge-green" style="margin-top:4px;">Safe</span></div>
+        </div>
+      </div>
+
+      <!-- Dashboard Grid -->
+      <div class="dash-grid">
+        <!-- Senior Profile Card -->
+        <div class="card fade-on-scroll">
+          <h3 class="card-title mb-2">Senior Profile</h3>
+          <div class="profile-card">
+            <div class="profile-avatar-lg">RK</div>
+            <div class="profile-details">
+              <h3 id="seniorName">–</h3>
+              <div class="profile-meta">
+                <span id="seniorAge"><i class="fas fa-calendar"></i> –</span>
+                <span id="seniorBlood"><i class="fas fa-droplet"></i> –</span>
+              </div>
+              <p id="seniorAllergies" style="font-size:0.8rem;color:var(--primary);margin-bottom:4px;"><i class="fas fa-triangle-exclamation"></i> –</p>
+              <p id="lastSeenLocation" style="font-size:0.8rem;color:var(--text-secondary);"><i class="fas fa-location-dot"></i> –</p>
+              <div class="profile-actions mt-2">
+                <button class="btn btn-secondary btn-sm"><i class="fas fa-phone"></i> Call Senior</button>
+                <button class="btn btn-outline btn-sm" onclick="window.location.href='health-vault.html'"><i class="fas fa-id-card"></i> Health Card</button>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Live Map Placeholder -->
+        <div class="card fade-on-scroll">
+          <h3 class="card-title mb-2">Live Location</h3>
+          <div class="map-placeholder">
+            <div class="map-grid"></div>
+            <div class="map-pin" id="mapPin">
+              <i class="fas fa-location-dot"></i>
+              <p>Live location appears during SOS</p>
+            </div>
+            <div class="location-dot" id="locationDot"></div>
+          </div>
+        </div>
+
+        <!-- Medicine Adherence Chart -->
+        <div class="card fade-on-scroll">
+          <h3 class="card-title mb-2">Medicine Adherence (This Week)</h3>
+          <div style="height:240px;"><canvas id="adherenceChart"></canvas></div>
+        </div>
+
+        <!-- Risk Score Card -->
+        <div class="card fade-on-scroll">
+          <h3 class="card-title mb-2">Risk Score</h3>
+          <div style="display:flex;gap:24px;align-items:center;flex-wrap:wrap;">
+            <div class="circular-progress">
+              <svg width="140" height="140">
+                <circle class="bg-circle" cx="70" cy="70" r="58"></circle>
+                <circle class="progress-circle" id="riskProgressCircle" cx="70" cy="70" r="58" stroke="#2E7D32" style="stroke-dasharray:364;stroke-dashoffset:364;"></circle>
+              </svg>
+              <div class="progress-text">
+                <div class="score" id="riskScoreValue">0</div>
+                <div class="label">/ 100</div>
+              </div>
+            </div>
+            <div class="risk-breakdown" style="flex:1;min-width:160px;">
+              <div style="margin-bottom:8px;"><span class="badge badge-green">Low Risk</span></div>
+              <div class="risk-item"><span class="label">Missed Meds</span><span class="value">1</span></div>
+              <div class="risk-item"><span class="label">Missed Check-ins</span><span class="value">0</span></div>
+              <div class="risk-item"><span class="label">SOS Events</span><span class="value">0</span></div>
+            </div>
+          </div>
+          <div style="height:120px;margin-top:16px;"><canvas id="riskSparkline"></canvas></div>
+        </div>
+      </div>
+
+      <!-- Nearby Hospitals (shown during SOS) -->
+      <div class="dash-section" id="nearbyHospitals" style="display:none;">
+        <div class="card">
+          <h3 class="card-title mb-2">🏥 Nearest Hospitals</h3>
+          <div id="caregiverHospitalList"></div>
+        </div>
+      </div>
+
+      <!-- Recent SOS History -->
+      <div class="dash-section">
+        <div class="card fade-on-scroll">
+          <h3 class="card-title mb-2">Recent SOS History</h3>
+          <div style="overflow-x:auto;">
+            <table class="data-table">
+              <thead>
+                <tr><th>Date</th><th>Time</th><th>Location</th><th>Status</th><th>Resolved By</th></tr>
+              </thead>
+              <tbody id="sosHistoryBody"></tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Bottom Navigation (Mobile) -->
+  <nav class="bottom-nav mobile-only">
+    <a href="caregiver.html" class="active"><i class="fas fa-gauge-high"></i><span>Dashboard</span></a>
+    <a href="#"><i class="fas fa-map-location-dot"></i><span>Map</span></a>
+    <a href="medicines.html"><i class="fas fa-pills"></i><span>Medicines</span></a>
+    <a href="reports.html"><i class="fas fa-chart-line"></i><span>Reports</span></a>
+    <a href="#"><i class="fas fa-gear"></i><span>Settings</span></a>
+  </nav>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.js"></script>
+  <script src="data/mock-data.js"></script>
+  <script src="js/app.js"></script>
+  <script src="js/charts.js"></script>
+  <script src="js/caregiver.js"></script>
+  <script>
+    // Populate nearby hospitals for SOS panel
+    document.addEventListener('DOMContentLoaded', function() {
+      const list = document.getElementById('caregiverHospitalList');
+      hospitals.forEach(h => {
+        list.innerHTML += `
+          <div style="display:flex;align-items:center;gap:14px;padding:12px 0;border-bottom:1px solid var(--border);">
+            <div style="width:44px;height:44px;border-radius:12px;background:#FFF3E0;display:flex;align-items:center;justify-content:center;">
+              <i class="fas fa-hospital" style="color:var(--orange-light);"></i>
+            </div>
+            <div style="flex:1;">
+              <div style="font-weight:600;">${h.name}</div>
+              <div style="font-size:0.8rem;color:var(--text-secondary);">${h.distance} • ${h.phone}</div>
+            </div>
+            <a href="tel:${h.phone}" class="btn btn-sm btn-outline" style="min-height:36px;"><i class="fas fa-phone"></i></a>
+          </div>
+        `;
+      });
+    });
+  </script>
+</body>
+</html>
